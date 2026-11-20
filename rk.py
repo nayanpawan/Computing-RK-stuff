@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
+#task 5 msd solver#
 def state_deriv_msd(t,z):
     
     m = 2.0    # mass, kg
@@ -14,7 +14,7 @@ def state_deriv_msd(t,z):
     dz = np.array([dz1, dz2])
     return dz
 
-
+#euler method solver#
 def step_euler(state_deriv,t,dt,z):
 
     
@@ -23,8 +23,11 @@ def step_euler(state_deriv,t,dt,z):
     
     return znext
 
+#runge-kutta 4 method solver#
+
 def step_rk(state_deriv,t,dt,z):
 
+    #claculating vals to get znext#
     A= dt*(state_deriv(t,z))
     B= dt*(state_deriv(t+dt/2,z+A/2))
     C= dt*(state_deriv(t+dt/2,z+B/2))

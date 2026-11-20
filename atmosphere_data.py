@@ -6,9 +6,12 @@ data = pd.read_csv('titan_atmosphere.txt', sep=r'\s+')
 z0 = data.iloc[:, 0].values
 rh0 = data.iloc[:, 1].values
 
+#interpolating function for density#
 def atmospheric_profile(z):
     z = np.atleast_1d(z)
     rho = np.zeros(len(z))
+
+#this gives zero density for values outside atmosphere#
 
     for i in range(len(z)):
         if z[i] >= 0 and z[i] <= z0[-1]:
