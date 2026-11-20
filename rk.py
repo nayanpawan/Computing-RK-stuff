@@ -34,7 +34,7 @@ def step_rk(state_deriv,t,dt,z):
     
     return znext
 
-def solve_ivp(state_deriv,t0,tend,dt,z0,method='RK'):
+def solve_ivp(state_deriv,t0,tend,dt,z0,method='RK',stop='none'):
     
     # Set initial conditions
     t = np.array([t0])
@@ -57,6 +57,9 @@ def solve_ivp(state_deriv,t0,tend,dt,z0,method='RK'):
         z = np.append(z,znext,axis=1)
         
         n = n+1
+
+        if stop is not None and stop(t[n], z[:,n]):
+            break
     
     return t, z
 
