@@ -96,36 +96,41 @@ def find_beta(H, beta0, beta1, tol=1e3, max_iter=20):
     print('did not converge')
     return beta2
 
+def simulate(beta, dt=1, tend=40000):
+    t, z = solve_ivp(state_deriv_titan, 0, tend, dt, initial_state(beta), stop=hit_titan)
+    return t, z
 
-H = 9000e3
-prev_beta = None
-prev_apo = 0
+if __name__ =='__main__':
+
+    H = 9000e3
+    prev_beta = None
+    prev_apo = 0
 
 
-for beta_deg in np.arange(4.88337, 4.88338, 1e-6):
-    apo = apoapsis_altitude(np.radians(beta_deg))
-    print(f'{beta_deg:.3f} deg -> {apo/1e3:.1f} km')
+    for beta_deg in np.arange(4.88337, 4.88338, 1e-6):
+        apo = apoapsis_altitude(np.radians(beta_deg))
+        print(f'{beta_deg:.3f} deg -> {apo/1e3:.1f} km')
 
-    #check beta values lead to orbit further from apo stop#
-    if apo > H and prev_apo > 0:
-        break
-    prev_beta = beta_deg
-    prev_apo = apo
+        #check beta values lead to orbit further from apo stop#
+        if apo > H and prev_apo > 0:
+            break
+        prev_beta = beta_deg
+        prev_apo = apo
 
-beta = find_beta(H, np.radians(prev_beta), np.radians(beta_deg))
-print('beta =', np.degrees(beta), 'deg')
+    beta = find_beta(H, np.radians(prev_beta), np.radians(beta_deg))
+    print('beta =', np.degrees(beta), 'deg')
 
-#checking orbit for specific beta#
-# beta = np.radians(4.883374480677808)
+    #checking orbit for specific beta#
+    # beta = np.radians(4.883374480677808)
 
-t, z = solve_ivp(state_deriv_titan, 0, 80000, 1, initial_state(beta), stop=hit_titan)
+    t, z = solve_ivp(state_deriv_titan, 0, 80000, 1, initial_state(beta), stop=hit_titan)
 
-plt.figure()
-theta = np.linspace(0, 2*np.pi, 500)
-plt.fill(R*np.cos(theta)/1e3, R*np.sin(theta)/1e3, color='orange', label='Titan')
-plt.plot(z[0]/1e3, z[1]/1e3, label=f'β = {np.degrees(beta):.3f}°')
-plt.axis('equal')
-plt.xlabel('x, km')
-plt.ylabel('y, km')
-plt.legend()
-plt.show()
+    plt.figure()
+    theta = np.linspace(0, 2*np.pi, 500)
+    plt.fill(R*np.cos(theta)/1e3, R*np.sin(theta)/1e3, color='orange', label='Titan')
+    plt.plot(z[0]/1e3, z[1]/1e3, label=f'β = {np.degrees(beta):.3f}°')
+    plt.axis('equal')
+    plt.xlabel('x, km')
+    plt.ylabel('y, km')
+    plt.legend()
+    plt.show()
